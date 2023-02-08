@@ -1,5 +1,6 @@
-﻿import { Box, Button, Container, Group, TextInput, Title } from "@mantine/core";
+﻿import { Box, Button,  Group, TextInput, } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
+import { createGroup } from "../api/createGroup";
 
 export const CreateGroup = () => {
     const form = useForm({
@@ -14,8 +15,10 @@ export const CreateGroup = () => {
 
 
     return (
-        <Box component="form" maw={400} mx="auto" onSubmit={form.onSubmit((values) => {
+        <Box component="form" maw={400} mx="auto" onSubmit={form.onSubmit(async (values) => {
             console.log(values);
+            const group = await createGroup(values.name, values.description)
+            console.log(group);            
         })}>
             <TextInput label="Name"  withAsterisk {...form.getInputProps('name')} />
             <TextInput 
