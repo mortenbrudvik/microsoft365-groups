@@ -14,7 +14,8 @@ export const CreateGroup = () => {
 
 
     return (
-        <Box component="form" maw={400} mx="auto" onSubmit={form.onSubmit(() => {
+        <Box component="form" maw={400} mx="auto" onSubmit={form.onSubmit((values) => {
+            console.log(values);
         })}>
             <TextInput label="Name"  withAsterisk {...form.getInputProps('name')} />
             <TextInput 
