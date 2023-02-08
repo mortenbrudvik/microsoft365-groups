@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^5.10.3",
+    "@mantine/form": "^5.10.3",
     "@mantine/hooks": "^5.10.3",
     "@microsoft/mgt-element": "^2.9.0",
     "@microsoft/mgt-msal2-provider": "^2.9.0",
