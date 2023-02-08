@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { ThemeIcon, UnstyledButton, Group, Text } from '@mantine/core';
-import {AlertCircle, Database, GitPullRequest, Messages} from 'tabler-icons-react';
+import {Plus} from 'tabler-icons-react';
 
 interface MainLinkProps {
     icon: React.ReactNode;
@@ -36,10 +36,10 @@ function MainLink({ icon, color, label }: MainLinkProps) {
 }
 
 const data = [
-    { icon: <GitPullRequest size={16}  />, color: 'blue', label: 'Pull Requests' },
-    { icon: <AlertCircle size={16} />, color: 'teal', label: 'Open Issues' },
-    { icon: <Messages size={16} />, color: 'violet', label: 'Discussions' },
-    { icon: <Database size={16} />, color: 'grape', label: 'Databases' },
+    { icon: <Plus size={16}  />, color: 'blue', label: 'Create group' },
+    // { icon: <AlertCircle size={16} />, color: 'teal', label: 'Open Issues' },
+    // { icon: <Messages size={16} />, color: 'violet', label: 'Discussions' },
+    // { icon: <Database size={16} />, color: 'grape', label: 'Databases' },
 ];
 
 export function MainLinks() {

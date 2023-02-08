@@ -1,11 +1,7 @@
-﻿import {ActionIcon, Box, Group, useMantineColorScheme} from "@mantine/core";
+﻿import {Box, Group, Title} from "@mantine/core";
 import React from "react";
-import {Logo} from "./Logo";
-import {MoonStars, Sun } from "tabler-icons-react";
 
 export function Brand() {
-    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-
     return (
         <Box
             sx={(theme) => ({
@@ -18,10 +14,7 @@ export function Brand() {
             })}
         >
             <Group position="apart">
-                <Logo colorScheme={colorScheme} />
-                <ActionIcon variant="default" onClick={() => toggleColorScheme()} size={30}>
-                    {colorScheme === 'dark' ? <Sun  /> : <MoonStars/>}
-                </ActionIcon>
+                <Title order={4}>Microsoft 365 Groups</Title>
             </Group>
         </Box>
     );
