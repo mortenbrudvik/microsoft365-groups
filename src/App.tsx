@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {ColorScheme, ColorSchemeProvider, MantineProvider, Navbar} from "@mantine/core";
 import {Brand} from "./Brand";
 import {MainLinks} from "./MainLinks";
-import {User} from './User';
+import {UserLogin} from './UserLogin';
 import './App.css';
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
                         <MainLinks/>
                     </Navbar.Section>
                     <Navbar.Section>
-                        <User/>
+                        <UserLogin/>
                     </Navbar.Section>
                 </Navbar>
             </MantineProvider>
