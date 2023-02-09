@@ -5,7 +5,8 @@ import {MainLinks} from "./MainLinks";
 import {UserLogin} from './UserLogin';
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import {CreateGroup} from "./features/CreateGroup";
+import {CreateGroup} from "./features/Groups";
+import {Groups} from "./features/Groups/components/Groups";
 
 function App() {
     const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
@@ -29,6 +30,7 @@ function App() {
                     <div className="content">
                         <Routes>
                             <Route path="/create-group" element={<CreateGroup/>}/>
+                            <Route path="/groups" element={<Groups/>}/>
                         </Routes>
                     </div>
                 </div>
