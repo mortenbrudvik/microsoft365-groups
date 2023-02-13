@@ -2,16 +2,14 @@
 import {useEffect, useState} from "react";
 import {ActionIcon, Group, Stack} from "@mantine/core";
 import { X } from "tabler-icons-react";
-import { IconX } from "@tabler/icons";
 
 export const Groups = () => {
-    
     const [groups, setGroups] = useState<any[]>([]);
     
     useEffect(() => {
         (async () => {
-            //const groups = await Providers.client?.api("/groups").get();
-            const groups = await Providers.client?.api("/groups?$filter=creationOptions/Any(x:x eq 'Team')&$select=displayName,id,description").get();
+            const groups = await Providers.client?.api("/groups").get();
+            //const groups = await Providers.client?.api("/groups?$filter=creationOptions/Any(x:x eq 'Team')&$select=displayName,id,description").get();
             console.log(groups);
             setGroups(groups.value)
         })();

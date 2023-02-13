@@ -7,6 +7,7 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import {CreateGroup} from "./features/Groups";
 import {Groups} from "./features/Groups/components/Groups";
+import {Jokes} from "./features/Groups/components/Jokes";
 
 function App() {
     const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
@@ -31,6 +32,7 @@ function App() {
                         <Routes>
                             <Route path="/create-group" element={<CreateGroup/>}/>
                             <Route path="/groups" element={<Groups/>}/>
+                            <Route path="/jokes" element={<Jokes/>}/>
                         </Routes>
                     </div>
                 </div>
