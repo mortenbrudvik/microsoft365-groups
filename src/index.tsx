@@ -7,7 +7,7 @@ import {BrowserRouter} from "react-router-dom";
 
 Providers.globalProvider = new Msal2Provider({
     clientId: '714f59f6-e68c-454b-ab67-d73b6fa73f12',
-    scopes: ['user.read', 'Group.ReadWrite.All']
+    scopes: ['user.read', 'Group.ReadWrite.All', 'User.ReadBasic.All', 'User.Read.All','GroupMember.Read.All','Presence.Read']
 });
 
 const root = ReactDOM.createRoot(
