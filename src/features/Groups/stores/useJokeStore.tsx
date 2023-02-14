@@ -8,7 +8,7 @@ export interface JokeStore {
     selectedJoke: Joke | undefined;
     addJoke: (joke: Joke) => void;
     shareWith: (joke: Joke, persons: IDynamicPerson[]) => void;
-    setSelected: (joke: Joke) => void;
+    setSelected: (joke: Joke|undefined) => void;
 }
 
 export const useJokeStore = create(immer<JokeStore>((set, get) => ({
@@ -21,7 +21,7 @@ export const useJokeStore = create(immer<JokeStore>((set, get) => ({
         const updatedJoke = state.jokes.find(j => j.id === joke.id)!;
         updatedJoke.sharedWith = persons;
     }),
-    setSelected: (joke: Joke) => set((state) => {
+    setSelected: (joke: Joke|undefined) => set((state) => {
         state.selectedJoke = joke;
     }),
 })));

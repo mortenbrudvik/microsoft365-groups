@@ -3,7 +3,7 @@ import { PeoplePicker, People, PersonType } from "@microsoft/mgt-react";
 import {useJokeStore} from "../stores/useJokeStore";
 import { Joke } from '../types/Joke';
 import { createJoke } from '../api/createJoke';
-import {useScrollIntoView} from "@mantine/hooks";
+import { useClickOutside, useScrollIntoView } from "@mantine/hooks";
 
 export const Jokes = () => {
     const {targetRef, scrollIntoView} = useScrollIntoView<HTMLDivElement>()
@@ -13,13 +13,13 @@ export const Jokes = () => {
     return (
         <>
             <ScrollArea >
-                <Stack>
+                <Stack mb={25}>
                     {jokeStore.jokes.map(joke => (
                         <JokeCard joke={joke}/>
                     ))}
                 </Stack>
             </ScrollArea>
-                <Button mt={10} onClick={async () => {
+                <Button mt={15} onClick={async () => {
                     const joke = await createJoke('nature');
                     jokeStore.addJoke(joke);
                     scrollIntoView();
@@ -34,15 +34,18 @@ export const Jokes = () => {
 };
 
 const JokeCard = (props:{joke: Joke}) => {
-    const {setSelected} = useJokeStore();
+    const {setSelected, selectedJoke} = useJokeStore();
     const {id, setup, punchline, image, sharedWith} = props.joke;
     
+    const isSelected = selectedJoke?.id === id;
+    const textColor = isSelected ? "blue" : "black";
     return <Card
         key={id}
-        shadow="sm"
+        shadow="xl"
+        radius="lg"
+        withBorder
+        m="md"
         p="xl"
-        component="a"
-        target="_blank"
         w={400}
         onClick={() => {
             console.log("set selected joke: " + id );
@@ -57,46 +60,53 @@ const JokeCard = (props:{joke: Joke}) => {
             />
         </Card.Section>
 
-        <Text weight={350} size="lg" mt="md">
+        <Text color={textColor } 
+              size="lg" 
+              mt="md">
             {setup}
         </Text>
 
-        <Text weight={450} size="lg" mt="md">
+        <Text
+            color={textColor }
+            weight={450} size="lg" mt="md">
             {punchline}
         </Text>
+
         <People people={sharedWith} showPresence/>
     </Card>;
 };
 
-const JokeSidePanel = ({jokeId}: {jokeId: string}) => {
+const JokeSidePanel = ({jokeId}: { jokeId: string }) => {
     const jokeStore = useJokeStore();
+    const ref = useClickOutside(() => jokeStore.setSelected(undefined));
+
     const joke = jokeStore.jokes.find(j => j.id === jokeId);
-    if(!joke) return <div>no joke</div>;
+    if (!joke) return <div>no joke</div>;
     const {sharedWith, id, punchline, setup} = joke!;
-    return<Affix position={{top: 50, right: 50}}>
-        <Paper shadow="xs" p="md" w={400}>
-        <Stack>
-            <TextInput
-                size="lg"
-                label="Joke Setup"
-                value={setup}
-            />
-            <TextInput
-                size="lg"
-                label="Joke Punchline"
-                value={punchline}
-            />
-            <Text weight={550} size="lg" mt={0} mb={0} pb={0}>Share with</Text>
+    return <Affix position={{top: 50, right: 50}}>
+        <Paper shadow="xs" p="md" w={400} ref={ref}>
+            <Stack>
+                <TextInput
+                    size="lg"
+                    label="Joke Setup"
+                    value={setup}
+                />
+                <TextInput
+                    size="lg"
+                    label="Joke Punchline"
+                    value={punchline}
+                />
+                <Text weight={550} size="lg" mt={0} mb={0} pb={0}>Share with</Text>
 
-            <PeoplePicker
-                selectionMode="multiple"
-                type={PersonType.any}
-                selectedPeople={sharedWith}
-                selectionChanged={(e: any) => {
-                    jokeStore.shareWith(joke, e.target.selectedPeople);
-                }}
-            />
+                <PeoplePicker
+                    selectionMode="multiple"
+                    type={PersonType.any}
+                    selectedPeople={sharedWith}
+                    selectionChanged={(e: any) => {
+                        jokeStore.shareWith(joke, e.target.selectedPeople);
+                    }}
+                />
 
-        </Stack>
-    </Paper></Affix>
+            </Stack>
+        </Paper></Affix>
 };
