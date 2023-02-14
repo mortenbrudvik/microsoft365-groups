@@ -1,5 +1,6 @@
 ﻿.aside {
     height: 100vh;
+    position: fixed;
 }
 
 .content {

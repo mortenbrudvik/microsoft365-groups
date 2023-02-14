@@ -1,83 +1,102 @@
-﻿import { Affix, Card, Image, Paper, Stack, Text, TextInput } from '@mantine/core';
-import { useEffect, useState } from "react";
+﻿import { Affix, Button, Card, Image, Paper, Stack, Text, TextInput, ScrollArea } from '@mantine/core';
 import { PeoplePicker, People, PersonType } from "@microsoft/mgt-react";
+import {useJokeStore} from "../stores/useJokeStore";
+import { Joke } from '../types/Joke';
+import { createJoke } from '../api/createJoke';
+import {useScrollIntoView} from "@mantine/hooks";
 
 export const Jokes = () => {
-    const [image, setImage] = useState('https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80');
-    const topic = 'film'; // change this to any topic you want
-    const [joke, setJoke] = useState<any>(null);
-    const [people, setPeople] = useState([]);
-    console.log(people);
-
-    useEffect(() => {
-        fetch(`https://source.unsplash.com/random/800x600?${topic}`)
-            .then((response) => setImage(response.url))
-            .catch((error) => console.error(error));
-    }, [topic]);
-
-    useEffect(() => {
-        fetch('https://official-joke-api.appspot.com/random_joke')
-            .then((response) => response.json())
-            .then((data) => {
-                setJoke(data);
-            })
-            .catch((error) => console.error(error));
-    }, []);
+    const {targetRef, scrollIntoView} = useScrollIntoView<HTMLDivElement>()
+    const jokeStore = useJokeStore();
 
     // href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     return (
         <>
-            <Card
-                shadow="sm"
-                p="xl"
-                component="a"
-                target="_blank">
-                <Card.Section>
-                    <Image
-                        src={image}
-                        height={160}
-                        alt="No way!"
-                    />
-                </Card.Section>
+            <ScrollArea >
+                <Stack>
+                    {jokeStore.jokes.map(joke => (
+                        <JokeCard joke={joke}/>
+                    ))}
+                </Stack>
+            </ScrollArea>
+                <Button mt={10} onClick={async () => {
+                    const joke = await createJoke('nature');
+                    jokeStore.addJoke(joke);
+                    scrollIntoView();
+                }}>
+                    Create Joke
+                </Button>
+                <div ref={targetRef}/>
 
-                <Text weight={350} size="lg" mt="md">
-                    {joke && joke.setup}
-                </Text>
-
-                <Text weight={450} size="lg" mt="md">
-                    {joke && joke.punchline}
-                </Text>
-                <People people={people} showPresence/>
-            </Card>
-            <Affix position={{top: 50, right: 50}}>
-
-
-                <Paper shadow="xs" p="md" w={400} >
-                    <Stack >
-                        <TextInput
-                            size="lg"
-                            label="Joke Setup"
-                            value={joke && joke.setup}
-                        />
-                        <TextInput
-                            size="lg"
-                            label="Joke Punchline"
-                            value={joke && joke.punchline}
-                        />
-                        <Text weight={550} size="lg" mt={0} mb={0} pb={0} >Share with</Text>
-                        
-                        <PeoplePicker
-                            selectionMode="multiple"
-                            type={PersonType.any}
-                            selectedPeople={people}
-                            selectionChanged={(e:any) => {
-                                setPeople(e.target.selectedPeople);
-                            }}
-                        />
-                        
-                    </Stack>
-                </Paper>
-            </Affix>
+            { jokeStore.selectedJoke && <JokeSidePanel jokeId={jokeStore.selectedJoke.id} />}
         </>
     );
+};
+
+const JokeCard = (props:{joke: Joke}) => {
+    const {setSelected} = useJokeStore();
+    const {id, setup, punchline, image, sharedWith} = props.joke;
+    
+    return <Card
+        key={id}
+        shadow="sm"
+        p="xl"
+        component="a"
+        target="_blank"
+        w={400}
+        onClick={() => {
+            console.log("set selected joke: " + id );
+            return setSelected(props.joke);
+        }}
+    >
+        <Card.Section>
+            <Image
+                src={image}
+                height={100}
+                alt="No way!"
+            />
+        </Card.Section>
+
+        <Text weight={350} size="lg" mt="md">
+            {setup}
+        </Text>
+
+        <Text weight={450} size="lg" mt="md">
+            {punchline}
+        </Text>
+        <People people={sharedWith} showPresence/>
+    </Card>;
+};
+
+const JokeSidePanel = ({jokeId}: {jokeId: string}) => {
+    const jokeStore = useJokeStore();
+    const joke = jokeStore.jokes.find(j => j.id === jokeId);
+    if(!joke) return <div>no joke</div>;
+    const {sharedWith, id, punchline, setup} = joke!;
+    return<Affix position={{top: 50, right: 50}}>
+        <Paper shadow="xs" p="md" w={400}>
+        <Stack>
+            <TextInput
+                size="lg"
+                label="Joke Setup"
+                value={setup}
+            />
+            <TextInput
+                size="lg"
+                label="Joke Punchline"
+                value={punchline}
+            />
+            <Text weight={550} size="lg" mt={0} mb={0} pb={0}>Share with</Text>
+
+            <PeoplePicker
+                selectionMode="multiple"
+                type={PersonType.any}
+                selectedPeople={sharedWith}
+                selectionChanged={(e: any) => {
+                    jokeStore.shareWith(joke, e.target.selectedPeople);
+                }}
+            />
+
+        </Stack>
+    </Paper></Affix>
 };
