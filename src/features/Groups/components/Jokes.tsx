@@ -1,6 +1,5 @@
-﻿import { Affix, Button, Card, Group, Image, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
+﻿import { Affix, Card, Image, Paper, Stack, Text, TextInput } from '@mantine/core';
 import { useEffect, useState } from "react";
-import { useForm } from "@mantine/form";
 import { PeoplePicker, People, PersonType } from "@microsoft/mgt-react";
 
 export const Jokes = () => {
@@ -8,6 +7,7 @@ export const Jokes = () => {
     const topic = 'film'; // change this to any topic you want
     const [joke, setJoke] = useState<any>(null);
     const [people, setPeople] = useState([]);
+    console.log(people);
 
     useEffect(() => {
         fetch(`https://source.unsplash.com/random/800x600?${topic}`)
@@ -47,7 +47,7 @@ export const Jokes = () => {
                 <Text weight={450} size="lg" mt="md">
                     {joke && joke.punchline}
                 </Text>
-                <People showPresence/>
+                <People people={people} showPresence/>
             </Card>
             <Affix position={{top: 50, right: 50}}>
 
@@ -69,7 +69,7 @@ export const Jokes = () => {
                         <PeoplePicker
                             selectionMode="multiple"
                             type={PersonType.any}
-                            people={people}
+                            selectedPeople={people}
                             selectionChanged={(e:any) => {
                                 setPeople(e.target.selectedPeople);
                             }}

@@ -30,6 +30,7 @@ function App() {
                     </Navbar>
                     <div className="content">
                         <Routes>
+                            <Route path="/" element={<Jokes/>}/>
                             <Route path="/create-group" element={<CreateGroup/>}/>
                             <Route path="/groups" element={<Groups/>}/>
                             <Route path="/jokes" element={<Jokes/>}/>
